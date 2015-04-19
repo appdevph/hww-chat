@@ -35,21 +35,21 @@
 	},
 
 	data_obj1: {
-		"API_Version"              : "",
-		"Call_Center_Address"      : "",
-		"Call_Center_QueueName"    : "", // "DefaultQueue",
-		"Calling_User_HardMessage" : "",
-		"TQOS"                     : "0",
-		"Routing_Priority"         : "0",
-		"AccountID"                : "0",
-		"Calling_User_Skills"      : "ChatSkill",
-		"ApplicationID"            : "DefaultApplication",
-		"Call_Center_Port"         : "",
-		"Calling_User_Priority"    : "-1",
-		"Calling_User_URL"         : "",
-		"Calling_User_FirstName"   : "CustomerFirstName",
-		"Calling_User_LastName"    : "CustomerLastName",
-		"TenantID"                 : "Tenant11"
+		"API_Version" : "1.0",
+		"Call_Center_Address" : "192.168.14.159", // 192.116.195.147 || 192.168.14.159
+		"Call_Center_QueueName" : "Chat", // "DefaultQueue",
+		"Calling_User_HardMessage" : "I need some help",
+		"TQOS" : "0",
+		"Routing_Priority" : "0",
+		"AccountID" : "0",
+		"Calling_User_Skills" : "ChatSkill",
+		"ApplicationID" : "DefaultApplication",
+		"Call_Center_Port" : "2324",
+		"Calling_User_Priority" : "-1",
+		"Calling_User_URL" : "",
+		"Calling_User_FirstName" : "CustomerFirstName",
+		"Calling_User_LastName" : "CustomerLastName",
+		"TenantID" : "Tenant11"
 	},
 
 	data_obj2: { "Connection_ID": 123, "Message_Text": "enghouse test page" },
@@ -57,10 +57,11 @@
 	data_obj4: { "Connection_ID": 123, "Last_Event_ID": 4 },
 
 	data_global: {
-		his              : "",
-		connId           : -1,
-		lastEventId      : 0,
-		CCUServerAddress : ""
+		his : "",
+		connId : -1,
+		lastEventId : 0,
+		// CCUServerAddress : "http://192.116.195.147"
+		CCUServerAddress : "http://192.168.14.159"
 	},
 
 	// Init binds event listeners and sets up timers:

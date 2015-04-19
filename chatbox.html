@@ -19,10 +19,8 @@
 		<div id="chatbox" class="hidden">
 		<a href="#" class="open" id="chat">Live Chat</a>
 		<p class="close"><a href="#" id="close"><span>x</span> No Thanks!</a></p>
-		<p class="chatbox-title">We're Online!</p>
+		<p class="chatbox-title"><strong>We're always online 24x7x365</strong></br>Chat with any of our helpdesk support now!</p>
 			<form>
-				<div id ="chatStatus" class="statusLine">Not connected</div> 
-
 				<ol id="discussion"></ol>
 
 				<div id="chatUsers"></div>
@@ -32,13 +30,14 @@
 
 					<div id="loginForm">
 						<p><label for="Name"><strong>Please tell us who you are</strong></strong><span><strong> *</strong></span></label><input type="text" id="name" placeholder="Name, Email" /></p>
-						<p><label for="Subject"><strong>How can we help you?</strong><span><strong> *</strong></span></label><textarea id="subject" cols="30" rows="2" placeholder="Have questions about our products or services? Talk to us!"></textarea></p>
+						<p><label for="Subject"><strong>How can we help you?</strong><span><strong> *</strong></span></label><textarea id="subject" cols="30" rows="2" placeholder="Have questions about our products or services? Tell us!"></textarea></p>
 						<p><input id="connect" type="button" value="Start Chatting" /></p>
 					</div>
 
 					<div id="submitForm">
 						<p><input id="chatText" name="chatText" maxlength="200" type="text" placeholder="Type your message here"/></p>
 						<!--p><input id="send" type="button" class="blueButton" value="Send" /></p-->
+						<div id ="chatStatus" class="statusLine">Not connected</div> 
 					</div>
 				</div>
 			</form>
