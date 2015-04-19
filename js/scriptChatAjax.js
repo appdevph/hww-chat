@@ -19,13 +19,14 @@ var chat = {
     init: function () {
 
         // Using the defaultText jQuery plugin, included at the bottom:
-        $('#name').defaultText('Your name');
-        $('#subject').defaultText('Subject');
+        // $('#name').defaultText('Your name');
+        // $('#subject').defaultText('Message');
+        
 
-        // Converting the #chatLineHolder div into a jScrollPane,
+        // Converting the #discussion div into a jScrollPane,
         // and saving the plugin's API in chat.data:
 
-        chat.data.jspAPI = $('#chatLineHolder').jScrollPane({
+        chat.data.jspAPI = $('#discussion').jScrollPane({
             verticalDragMinHeight: 12,
             verticalDragMaxHeight: 12
         }).data('jsp');
@@ -49,6 +50,26 @@ var chat = {
             return '';
         };
 
+        $('#subject').on("keypress", function (e) {            
+
+            if (e.keyCode == 13) {
+                // Cancel the default action on keypress event
+                e.preventDefault(); 
+
+                // Using our tzPOST wrapper function
+                // (defined in the bottom):
+                chatSDK.joinchat($('#name').val(), $('#subject').val(), function (success, result) {
+
+                    working = false;
+
+                    if (success == false) {             
+                        chat.displayError(result.statusText);
+                    } else {
+                        chat.login($('#name').val(), result.Connection_ID);
+                    }
+                });
+            }
+        });
 
         $(document).on("click", "#connect", function () {
 
@@ -74,50 +95,53 @@ var chat = {
 
         // Submitting a new chat entry:
 
-        $(document).on("click", "#send", function () {
-            //$('#submitForm').submit(function () {
+        $('#chatText').on("keypress", function (e) {            
 
-            var text = $('#chatText').val();
-            if (text.length == 0) { return false; }
-            if (working) return false;
-            working = true;
+            if (e.keyCode == 13) {
+                // Cancel the default action on keypress event
+                e.preventDefault(); 
 
-            // Assigning a temporary ID to the chat:
-            var tempID = 't' + Math.round(Math.random() * 1000000),
-			params = {
-			    id: tempID,
-			    author: chat.data.name,
-			    author_type: 'me',
-			    gravatar: chat.data.gravatar,
-			    text: text.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-			};
+                var text = $('#chatText').val();
+                if (text.length == 0) { return false; }
+                if (working) return false;
+                working = true;
 
-            // Using our addChatLine method to add the chat
-            // to the screen immediately, without waiting for
-            // the AJAX request to complete:
-            chat.addChatLine($.extend({}, params));
+                // Assigning a temporary ID to the chat:
+                var tempID = 't' + Math.round(Math.random() * 1000000),
+    			params = {
+    			    id: tempID,
+    			    author: chat.data.name,
+    			    author_type: 'me',
+    			    gravatar: chat.data.gravatar,
+    			    text: text.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    			};
 
-            // Using our tzPOST wrapper method to send the chat
-            // via a POST AJAX request:
+                // Using our addChatLine method to add the chat
+                // to the screen immediately, without waiting for
+                // the AJAX request to complete:
+                chat.addChatLine($.extend({}, params));
 
-            chatSDK.sendmsg(text, function (success, result) {
+                // Using our tzPOST wrapper method to send the chat
+                // via a POST AJAX request:
 
-                //           $.tzPOST('submitChat', $(this).serialize(), function (r) {
-                working = false;
-                if (success == false) {
-                    $('div.chat-' + tempID).remove();
-                    chat.displayError(result.statusText);
-                }
-                else {
-                    //remove not sent message
-                    $('#chatText').val('');
+                chatSDK.sendmsg(text, function (success, result) {
 
-                    //params['id'] = r.insertID;
-                    //chat.addChatLine($.extend({}, params));
-                }
-            });
+                    //           $.tzPOST('submitChat', $(this).serialize(), function (r) {
+                    working = false;
+                    if (success == false) {
+                        $('li.chat-' + tempID).remove();
+                        chat.displayError(result.statusText);
+                    }
+                    else {
+                        //remove not sent message
+                        $('#chatText').val('');
 
-            return false;
+                        //params['id'] = r.insertID;
+                        //chat.addChatLine($.extend({}, params));
+                    }
+                });
+
+            }
         });
 
         // Logging the user out:
@@ -171,7 +195,7 @@ var chat = {
 
         $('#loginForm').fadeOut(function () {
 			$('#chatTopBar').fadeIn();
-			$('#chatLineHolder').fadeIn();
+			$('#discussion').fadeIn();
 						
             $('#submitForm').fadeIn();
             $('#chatText').focus();
@@ -195,10 +219,15 @@ var chat = {
 
             case 'chatLine':
                 arr = [
-					'<div class="chat ', params.author_type, ' chat-', params.id, ' rounded"><span class="gravatar"><img src="', (params.author_type == 'CCU' ? 'img/agent.jpg' : 'img/caller.png'),
+					/*'<div class="chat ', params.author_type, ' chat-', params.id, ' rounded"><span class="gravatar"><img src="', (params.author_type == 'CCU' ? 'img/agent.jpg' : 'img/caller.png'),
 					'" width="23" height="23" onload="this.style.visibility=\'visible\'" />', '</span><span class="author">', params.author,
 					':</span><span class="text">', params.text, '</span><span class="time">', params.time, '</span></div>'];
-                break;
+                    */
+                    '<li class="linechat ', (params.author_type == 'CCU' ? 'other' : 'self'), ' chat-', params.id, 
+                    '"><div class="avatar other"><img src="img/avatar.jpg" alt="avatar" onload="this.style.visibility=\'visible\'"/></div><div class="messages"><p><strong>', 
+                    params.author, '</strong></p><p>', params.text, '</p></div></li>'];
+                    /*<p><span class="time">', params.time, '</span></p>*/
+                    break;
 
             case 'user':
                 arr = [
@@ -235,29 +264,29 @@ var chat = {
 					  (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
 
         var markup = chat.render('chatLine', params),
-			exists = $('#chatLineHolder .chat-' + params.id);
+			exists = $('#discussion .chat-' + params.id);
 
-        if (exists.length) {
-            exists.remove();
-        }
+        // if (exists.length) {
+        //     exists.remove();
+        // }
 
-        if (!chat.data.lastID) {
-            // If this is the first chat, remove the
-            // paragraph saying there aren't any:
+        // if (!chat.data.lastID) {
+        //     // If this is the first chat, remove the
+        //     // paragraph saying there aren't any:
 
-            $('#chatLineHolder p').remove();
-        }
+        //     $('#discussion p').remove();
+        // }
 
         // If this isn't a temporary chat:
         //Always append
-        //if (params.id.toString().charAt(0) != 't') {
-        //    var previous = $('#chatLineHolder .chat-' + (+params.id - 1));
+        // if (params.id.toString().charAt(0) != 't') {
+        //    var previous = $('#discussion .chat-' + (+params.id - 1));
         //    if (previous.length) {
         //        previous.after(markup);
         //    }
         //    else chat.data.jspAPI.getContentPane().append(markup);
-        //}
-        //else
+        // }
+        // else
         chat.data.jspAPI.getContentPane().append(markup);
 
         // As we added new content, we need to
@@ -296,22 +325,25 @@ var chat = {
 
 
                 //working = false;
-
-                //            var chatResult = 't' + Math.round(Math.random() * 1000000),
-                //				                params = {
-                //				                    id: item.Event_ID,
-                //				                    Status_Code: item.Status_Code,
-                //				                    Estimated_Time: item.Estimated_Time,
-                //				                    Status_Desc: Status_Desc.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
-                //				                    Additional_Information: item.Additional_Information
-                //				                };
+                       // var chatResult = 't' + Math.round(Math.random() * 1000000),
+            				       //          params = {
+            				       //              id: item.Event_ID,
+            				       //              Status_Code: item.Status_Code,
+            				       //              Estimated_Time: item.Estimated_Time,
+            				       //              Status_Desc: Status_Desc.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+            				       //              Additional_Information: item.Additional_Information
+            				       //          };
 
                 noActivity = 0;
                 //chat.data.jspAPI.getContentPane().html('<p class="noChats">' + result.Status_Code + result.Status_Desc + '</p>');
                 //users.push('<p class="count">' + result.Status_Code + result.Status_Desc + '</p>');
 
-                //$('#chatStatus').html('<p class="count">' + result.Status_Code + result.Status_Desc + '</p>');
-    			
+                $('#chatStatus').html(result.Status_Desc);
+                if(result.Status_Desc!="") {
+                    $('#chatStatus').fadeIn();
+                }
+
+
     			log.info(result.Status_Code + result.Status_Desc);
     			if(result.Status_Code == "107") //disconnected
     			{
@@ -404,7 +436,7 @@ var chat = {
 
         $('#submitForm').fadeOut(function () {
 			$('#chatTopBar').fadeOut();
-			$('#chatLineHolder').fadeOut();
+			$('#discussion').fadeOut();
             $('#loginForm').fadeIn();
         });
 
