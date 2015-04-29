@@ -228,7 +228,7 @@ var chat = {
 					':</span><span class="text">', params.text, '</span><span class="time">', params.time, '</span></div>'];
                     */
                     '<li class="linechat ', (params.author_type == 'CCU' ? 'other' : 'self'), ' chat-', params.id, 
-                    '"><div class="avatar other"><img src="img/avatar.jpg" alt="avatar" onload="this.style.visibility=\'visible\'"/></div><div class="messages"><p><strong>', 
+                    '"><div class="avatar other"><img src="img/', (params.author_type == 'CCU' ? 'avatar-support.jpg' : 'avatar.jpg'), '" alt="avatar" onload="this.style.visibility=\'visible\'"/></div><div class="messages"><p><strong>', 
                     params.author, '</strong></p><p>', params.text, '</p></div></li>'];
                     /*<p><span class="time">', params.time, '</span></p>*/
                     break;
@@ -420,11 +420,11 @@ var chat = {
             html: msg
         });
 
-        // elem.click(function () {
-        //     $(this).fadeOut(function () {
-        //         $(this).remove();
-        //     });
-        // });
+        elem.click(function () {
+            $(this).fadeOut(function () {
+                $(this).remove();
+            });
+        });
 
         setTimeout(function () {
             elem.click();
