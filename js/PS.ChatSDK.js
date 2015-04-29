@@ -36,7 +36,7 @@
 
 	data_obj1: {
 		"API_Version" : "1.0",
-		"Call_Center_Address" : "192.168.14.159", // 192.116.195.147 || 192.168.14.159
+		"Call_Center_Address" : "192.168.14.159", // 192.116.195.147 || 192.168.14.159 || 125.5.111.115
 		"Call_Center_QueueName" : "Chat", // "DefaultQueue",
 		"Calling_User_HardMessage" : "I need some help",
 		"TQOS" : "0",
@@ -61,7 +61,7 @@
 		connId : -1,
 		lastEventId : 0,
 		// CCUServerAddress : "http://192.116.195.147"
-		CCUServerAddress : "http://192.168.14.159"
+		CCUServerAddress : "http://192.168.14.159" //125.5.111.115
 	},
 
 	// Init binds event listeners and sets up timers:

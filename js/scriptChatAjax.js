@@ -145,8 +145,7 @@ var chat = {
         });
 
         // Logging the user out:
-
-        $(document).on("click", "a.disconnectButton", function () {
+        $(document).on("click", "#disconnectButton", function () {
 
 
             chatSDK.leavechat(function (success, result) {
@@ -161,6 +160,10 @@ var chat = {
             });
             return false;
 
+        });
+
+        $(document).on("click", "#resetChat", function () { 
+            chat.reset();
         });
 
         // Checking whether the user is already logged (browser refresh)
@@ -191,10 +194,10 @@ var chat = {
 
         chat.data.name = name;
         chat.data.gravatar = gravatar;
-        $('#chatTopBar').html(chat.render('loginTopBar', chat.data));
+        //$('#chatTopBar').html(chat.render('loginTopBar', chat.data));
 
         $('#loginForm').fadeOut(function () {
-			$('#chatTopBar').fadeIn();
+			$('#chatStatus').fadeIn();
 			$('#discussion').fadeIn();
 						
             $('#submitForm').fadeIn();
@@ -212,7 +215,8 @@ var chat = {
         switch (template) {
             case 'loginTopBar':
                 arr = [
-                //				'<span><img src="', params.gravatar, '" width="23" height="23" />',
+                //'<span><img src="', params.gravatar, '" width="23" height="23" />',
+                '<span><img src="img/avatar-big.jpg" width="23" height="23" />',
 				'<span class="name">', params.name,
 				'</span><a href="" id="disconnectButton"  class="disconnectButton rounded">Disconnect</a></span>'];
                 break;
@@ -347,8 +351,9 @@ var chat = {
     			log.info(result.Status_Code + result.Status_Desc);
     			if(result.Status_Code == "107") //disconnected
     			{
-    				bContinue = false;
-    				chat.Disconnect();
+    				//bContinue = false;
+    				//chat.Disconnect();
+                    $('#chatStatus').html('Your chat has ended.');
     			}
 
             },
@@ -359,9 +364,9 @@ var chat = {
 
                 //working = false;
                 bContinue = false;
-                chat.Disconnect();
+                //chat.Disconnect();
     			
-                //$('#chatStatus').html('<p class="count">' + strParticipant + " disconnected.\n" + '</p>');
+                $('#chatStatus').html('<p class="count">' + strParticipant + " disconnected.\n" + '</p>');
     			log.info(strParticipant + " disconnected.");
 
             },
@@ -415,11 +420,11 @@ var chat = {
             html: msg
         });
 
-        elem.click(function () {
-            $(this).fadeOut(function () {
-                $(this).remove();
-            });
-        });
+        // elem.click(function () {
+        //     $(this).fadeOut(function () {
+        //         $(this).remove();
+        //     });
+        // });
 
         setTimeout(function () {
             elem.click();
@@ -430,19 +435,23 @@ var chat = {
 
     Disconnect: function () {
 
-        $('#chatTopBar > span').fadeOut(function () {
-            $('#disconnectButton').remove();
-        });
-
-        $('#submitForm').fadeOut(function () {
-			$('#chatTopBar').fadeOut();
-			$('#discussion').fadeOut();
-            $('#loginForm').fadeIn();
+        $('#discussion').fadeOut(function () {
+			$('#submitForm').fadeOut();
+            $('#endChat').fadeIn();
         });
 
         chat.data.jspAPI.getContentPane().html('<p class="noChats"></p>');
-        //$('#chatStatus').html('<p class="count">' + 'Disconnected' + '</p>');
+        $('#chatStatus').html('Disconnected');
 		log.info("Disconnected");
+
+    },
+
+    reset: function () {
+
+        $('#endChat').fadeOut(function () {
+            $('#chatStatus').html('<strong>We’re online every single day!</strong></br>Queries? Chat with our help desk support now.');
+            $('#loginForm').fadeIn();
+        });
 
     }
 

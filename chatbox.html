@@ -19,8 +19,11 @@
 		<div id="chatbox" class="hidden">
 		<a href="#" class="open" id="chat">Live Chat</a>
 		<p class="close"><a href="#" id="close"><span>x</span> No Thanks!</a></p>
-		<p class="chatbox-title"><strong>We're always online 24x7x365</strong></br>Chat with any of our helpdesk support now!</p>
+		<!--p class="chatbox-title"><strong>We’re online every single day!</strong></br>Queries? Chat with our help desk support now.</p-->
+		<div id="chatStatus" class="chatbox-title"><strong>We’re online every single day!</strong></br>Queries? Chat with our help desk support now.</div>
 			<form>
+				<!--div id ="chatStatus" class="statusLine"></div--> 
+
 				<ol id="discussion"></ol>
 
 				<div id="chatUsers"></div>
@@ -35,10 +38,18 @@
 					</div>
 
 					<div id="submitForm">
-						<p><input id="chatText" name="chatText" maxlength="200" type="text" placeholder="Type your message here"/></p>
-						<!--p><input id="send" type="button" class="blueButton" value="Send" /></p-->
-						<div id ="chatStatus" class="statusLine">Not connected</div> 
+						<p><input id="chatText" name="chatText" maxlength="200" type="text" placeholder="Enter your message here"/></p>
+						<p><input id="disconnectButton" type="button" value="End this Chat" /></p>
 					</div>
+				</div>
+
+				<div id="endChat">
+					<p><label for="thankyou">Thank you for chatting with us! May you have a great day ahead!</label></p>
+					&nbsp;
+					<p><input id="resetChat" type="button" value="Chat Again" /></p>
+					&nbsp;
+					<p><label for="ad">If you like this <strong>cool chat service</strong> on your website, learn more about our <strong><a href="/products-and-services/managed-voice/">Managed Voice</a><strong/> solutions.</label></p>
+					
 				</div>
 			</form>
 		</div>
@@ -47,7 +58,7 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/jScrollPane/jquery.mousewheel.js"></script>
+    <!--script src="js/jScrollPane/jquery.mousewheel.js"></script-->
 	<script src="js/jScrollPane/jScrollPane.min.js"></script>
 	<script src="js/PS.ChatSDK.js"></script>
 	<script src="js/scriptChatAjax.js"></script>
