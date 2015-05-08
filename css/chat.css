@@ -163,6 +163,7 @@ display:none;
 	outline:none;
 }
 
+input.ui-autocomplete-loading { background:url('img/loading.gif') no-repeat right center; }
 
 #submitForm, #endChat{
 	display:none;
@@ -205,7 +206,7 @@ input#chatText{
 /* Additional styles */
 
 
-a.disconnectButton{
+a.connectButton{
 	background-color:#bbb;
 	border:1px solid #eee !important;
 	color:#FFFFFF !important;

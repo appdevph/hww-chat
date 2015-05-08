@@ -22,24 +22,25 @@
 		<!--p class="chatbox-title"><strong>We’re online every single day!</strong></br>Queries? Chat with our help desk support now.</p-->
 		<div id="chatStatus" class="chatbox-title"><strong>We’re online every single day!</strong></br>Queries? Chat with our help desk support now.</div>
 			<form>
-				<!--div id ="chatStatus" class="statusLine"></div--> 
+
+				<!--div id ="chatStatus" class="statusLine"></div-->
 
 				<ol id="discussion"></ol>
-
+				
 				<div id="chatUsers"></div>
-
+				
 				<div id="chatBottomBar">
 					<div class="tip"></div>
-
 					<div id="loginForm">
-						<p><label for="Name"><strong>Please tell us who you are</strong></strong><span><strong> *</strong></span></label><input type="text" id="name" placeholder="Name, Email" /></p>
+						<p><label for="Name"><strong>Please tell us who you are</strong><span><strong> *</strong></span></label><input type="text" id="name" placeholder="Name, Email" /></p>
+						<!--p><input type="text" id="email" placeholder="Email Address" /></p-->
 						<p><label for="Subject"><strong>How can we help you?</strong><span><strong> *</strong></span></label><textarea id="subject" cols="30" rows="2" placeholder="Have questions about our products or services? Tell us!"></textarea></p>
 						<p><input id="connect" type="button" value="Start Chatting" /></p>
 					</div>
 
 					<div id="submitForm">
 						<p><input id="chatText" name="chatText" maxlength="200" type="text" placeholder="Enter your message here"/></p>
-						<p><input id="disconnectButton" type="button" value="End this Chat" /></p>
+						<p><input id="disconnectChat" type="button" value="End this Chat" /></p>
 					</div>
 				</div>
 
@@ -49,8 +50,9 @@
 					<p><input id="resetChat" type="button" value="Chat Again" /></p>
 					&nbsp;
 					<p><label for="ad">If you like this <strong>cool chat service</strong> on your website, learn more about our <strong><a href="/products-and-services/managed-voice/">Managed Voice</a><strong/> solutions.</label></p>
-					
 				</div>
+				<img src="img/loadingline.gif" id="loader"/>
+				<div id ="chatError" class="statusLine"></div> 
 			</form>
 		</div>
 

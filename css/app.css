@@ -9646,10 +9646,16 @@ a.open {
     color: #000
 }
 
-#chatText, #name, #subject{
+#chatText, #name, #email, #subject{
   border-color: #b90504;
   border-radius: 5px;
 }
+
+#loader {
+    width: 100%;
+    display: none; 
+}
+
 
 #discussion {
     list-style: none;
@@ -9769,11 +9775,11 @@ a.open {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     width: 100%;
+    word-wrap: break-word;
 }
 
 .messages p {
     color: #222;
-    /*font-family: Verdana, Geneva, sans-serif;*/
     font-size: 0.8rem;
     line-height: normal;
     margin: 0 0 0.2rem 0

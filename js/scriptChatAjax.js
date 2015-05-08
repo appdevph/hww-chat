@@ -55,6 +55,7 @@ var chat = {
             if (e.keyCode == 13) {
                 // Cancel the default action on keypress event
                 e.preventDefault(); 
+                $('#loader').show();
 
                 // Using our tzPOST wrapper function
                 // (defined in the bottom):
@@ -72,6 +73,7 @@ var chat = {
         });
 
         $(document).on("click", "#connect", function () {
+            $('#loader').show();
 
             if (working) return false;
             working = true;
@@ -145,17 +147,18 @@ var chat = {
         });
 
         // Logging the user out:
-        $(document).on("click", "#disconnectButton", function () {
-
+        $(document).on("click", "#disconnectChat", function () {
+            console.log('disconnectChat.click');
 
             chatSDK.leavechat(function (success, result) {
-
+                console.log('success:' + success);
+                console.log('result:' + result);
                 working = false;
                 if (success == false) {
                     chat.displayError(result.statusText);
                 }
                 else {
-                    chat.Disconnect();
+                    chat.disconnect();
                 }
             });
             return false;
@@ -197,6 +200,7 @@ var chat = {
         //$('#chatTopBar').html(chat.render('loginTopBar', chat.data));
 
         $('#loginForm').fadeOut(function () {
+            $('#loader').hide();
 			$('#chatStatus').fadeIn();
 			$('#discussion').fadeIn();
 						
@@ -210,7 +214,8 @@ var chat = {
     // that is needed by the other methods:
 
     render: function (template, params) {
-
+        console.log('template:' + template);
+        console.log(JSON.stringify(params));
         var arr = [];
         switch (template) {
             case 'loginTopBar':
@@ -229,10 +234,14 @@ var chat = {
                     */
                     '<li class="linechat ', (params.author_type == 'CCU' ? 'other' : 'self'), ' chat-', params.id, 
                     '"><div class="avatar other"><img src="img/', (params.author_type == 'CCU' ? 'avatar-support.jpg' : 'avatar.jpg'), '" alt="avatar" onload="this.style.visibility=\'visible\'"/></div><div class="messages"><p><strong>', 
-                    params.author, '</strong></p><p>', params.text, '</p></div></li>'];
+                    params.author, '</strong></p><p>', (params.url_pushed == null ? params.text : 'URL Received: <a href="' + params.url_pushed + '" target="_blank">' + params.url_pushed + '</a>'), '</p></div></li>'];
                     /*<p><span class="time">', params.time, '</span></p>*/
-                    break;
 
+                    break;
+            case 'chatStatus':
+                arr = [
+                    '<div id="linestatus" class="statusLine">', params.Status_Desc,'</div>'];
+                    break;                
             case 'user':
                 arr = [
 					'<div class="user" title="', params.name, '"><img src="',
@@ -269,6 +278,58 @@ var chat = {
 
         var markup = chat.render('chatLine', params),
 			exists = $('#discussion .chat-' + params.id);
+
+        // if (exists.length) {
+        //     exists.remove();
+        // }
+
+        // if (!chat.data.lastID) {
+        //     // If this is the first chat, remove the
+        //     // paragraph saying there aren't any:
+
+        //     $('#discussion p').remove();
+        // }
+
+        // If this isn't a temporary chat:
+        //Always append
+        // if (params.id.toString().charAt(0) != 't') {
+        //    var previous = $('#discussion .chat-' + (+params.id - 1));
+        //    if (previous.length) {
+        //        previous.after(markup);
+        //    }
+        //    else chat.data.jspAPI.getContentPane().append(markup);
+        // }
+        // else
+        chat.data.jspAPI.getContentPane().append(markup);
+
+        // As we added new content, we need to
+        // reinitialise the jScrollPane plugin:
+
+        chat.data.jspAPI.reinitialise();
+        chat.data.jspAPI.scrollToBottom(true);
+
+    },
+
+    // The addChatStatus method ads a chat entry to the page
+    addChatStatus: function (params) {
+
+        // All times are displayed in the user's timezone
+
+        var d = new Date();
+        if (params.time) {
+
+            // PHP returns the time in UTC (GMT). We use it to feed the date
+            // object and later output it in the user's timezone. JavaScript
+            // internally converts it for us.
+
+            d.setUTCHours(params.time.hours, params.time.minutes);
+        }
+
+        params.time = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' +
+                      (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+
+        var markup = chat.render('chatStatus', params),
+            exists = $('#discussion .chat-' + params.id);
 
         // if (exists.length) {
         //     exists.remove();
@@ -342,20 +403,10 @@ var chat = {
                 //chat.data.jspAPI.getContentPane().html('<p class="noChats">' + result.Status_Code + result.Status_Desc + '</p>');
                 //users.push('<p class="count">' + result.Status_Code + result.Status_Desc + '</p>');
 
-                $('#chatStatus').html(result.Status_Desc);
                 if(result.Status_Desc!="") {
-                    $('#chatStatus').fadeIn();
+                    //$('#chatStatus').fadeIn();
+                    chat.addChatStatus(result);
                 }
-
-
-    			log.info(result.Status_Code + result.Status_Desc);
-    			if(result.Status_Code == "107") //disconnected
-    			{
-    				//bContinue = false;
-    				//chat.Disconnect();
-                    $('#chatStatus').html('Your chat has ended.');
-    			}
-
             },
 
             function ChatDisconnect(strParticipant) {
@@ -364,9 +415,9 @@ var chat = {
 
                 //working = false;
                 bContinue = false;
-                //chat.Disconnect();
+                //chat.disconnect();
     			
-                $('#chatStatus').html('<p class="count">' + strParticipant + " disconnected.\n" + '</p>');
+                $('#chatStatus').html(strParticipant + " disconnected.");
     			log.info(strParticipant + " disconnected.");
 
             },
@@ -380,7 +431,7 @@ var chat = {
                 if (errCode != null)
                     chat.displayError(errCode);
                 else if (result != null)
-                    chat.displayError(result.statusText);
+                    chat.displayError(result.Error_Desc);
                 else //no events
                     chat.data.noActivity++;
 
@@ -412,37 +463,48 @@ var chat = {
 
     // This method displays an error message on the top of the page:
 
+
     displayError: function (msg) {
 	
 		log.error(msg);
-        var elem = $('<div>', {
-            id: 'chatErrorMessage',
-            html: msg
-        });
+        // var elem = $('<div>', {
+        //     id: 'chatErrorMessage',
+        //     html: msg
+        // });
 
-        elem.click(function () {
-            $(this).fadeOut(function () {
-                $(this).remove();
-            });
-        });
+        // elem.click(function () {
+        //     $(this).fadeOut(function () {
+        //         $(this).remove();
+        //     });
+        // });
+
+        // setTimeout(function () {
+        //     elem.click();
+        // }, 5000);
+
+        // elem.hide().appendTo('body').slideDown();
+        $('#chatError').html('<p>Error: ' + msg + '</p>');
+        $('#chatError').fadeIn();
 
         setTimeout(function () {
-            elem.click();
+            $('#chatError').fadeOut();
         }, 5000);
-
-        elem.hide().appendTo('body').slideDown();
     },
 
-    Disconnect: function () {
+    disconnect: function () {
 
-        $('#discussion').fadeOut(function () {
-			$('#submitForm').fadeOut();
+        $('#submitForm').fadeOut(function () {
+            chat.addChatStatus('You have ended your chat session');
             $('#endChat').fadeIn();
         });
+        
+        //$('#discussion').fadeOut(function () {
+		//	$('#submitForm').fadeOut();
+        //    $('#endChat').fadeIn();
+        //});
 
-        chat.data.jspAPI.getContentPane().html('<p class="noChats"></p>');
-        $('#chatStatus').html('Disconnected');
-		log.info("Disconnected");
+        //chat.data.jspAPI.getContentPane().html('<p class="noChats"></p>');
+		//log.info("Disconnected");
 
     },
 

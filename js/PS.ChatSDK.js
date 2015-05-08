@@ -3,10 +3,19 @@
 	// data holds variables for use in the class:
 
 	status_res: {
+		// "104": "Calling Call Center",
+		// "105": "Waiting for Agent",
+		// "106": "In Call",
+		// "107": "Not Connected",
+		// "133": "Connected to the call center",
+		// "157": "Call placed on hold",
+		// "165": "Waiting in queue"
+
+		//Customized status
 		"104": "Calling Call Center",
 		"105": "Waiting for Agent",
 		"106": "In Call",
-		"107": "Not Connected",
+		"107": "Disconnected",
 		"133": "Connected to the call center",
 		"157": "Call placed on hold",
 		"165": "Waiting in queue"
@@ -36,7 +45,8 @@
 
 	data_obj1: {
 		"API_Version" : "1.0",
-		"Call_Center_Address" : "192.168.14.159", // 192.116.195.147 || 192.168.14.159 || 125.5.111.115
+		//"Call_Center_Address" : "125.5.111.115", //public access
+		"Call_Center_Address" : "192.168.14.159", //private access
 		"Call_Center_QueueName" : "Chat", // "DefaultQueue",
 		"Calling_User_HardMessage" : "I need some help",
 		"TQOS" : "0",
@@ -60,8 +70,9 @@
 		his : "",
 		connId : -1,
 		lastEventId : 0,
-		// CCUServerAddress : "http://192.116.195.147"
-		CCUServerAddress : "http://192.168.14.159" //125.5.111.115
+		//CCUServerAddress : "http://192.116.195.147"
+		CCUServerAddress : "http://192.168.14.159" 
+		//CCUServerAddress : "http://125.5.111.115"
 	},
 
 	// Init binds event listeners and sets up timers:
@@ -106,13 +117,14 @@
 				chatSDK.data_global.lastEventId = item.Event_ID; // etc		
 				switch (item.Command) {
 					case "read": {
+						console.log(JSON.stringify(item));
 						var chatResult = {
 							id: item.Event_ID,
 							author: item.Participant_Name,
 							author_type: 'CCU',
 							gravatar: 'CCU',
 							text: item.Message_Text.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
-							Pused_Url: item.Pused_Url,
+							url_pushed: item.URL_Pushed,
 							Additional_Information: item.Additional_Information
 						};
 
@@ -151,7 +163,18 @@
 						break;
 					}
 					case "Error": {
-						GUICallbackFunctionChatError(item.Error_Code, null);
+						//GUICallbackFunctionChatError(item.Error_Code, null);
+
+						var nameOfError = "chatSDK.no_agent_for_this_call[" + item.Error_Code + "]";
+						var Error_Desc = eval(nameOfError);
+
+						var chatResult = {
+							Error_Code : item.Error_Code,
+							Error_Desc : Error_Desc
+						}
+
+						GUICallbackFunctionChatError("", chatResult);
+
 						break;
 					}
 
@@ -247,14 +270,14 @@
 	},
 
 	leavechat: function (GUICallbackFunction) {
-
+ 		console.log('leavechat');
 		//debugger;
 
 		if (chatSDK.isNotConnected())    //still no connection
 			return false;
 
 		chatSDK.data_obj3.Connection_ID = chatSDK.data_global.connId;
-
+		console.log(JSON.stringify(chatSDK.data_obj3));
 		$.ajax({
 			url: chatSDK.data_global.CCUServerAddress + "/scripts/ChatExtension.DLL?leavechat",
 			cache: false,
@@ -264,11 +287,13 @@
 			dataType: 'json'
 		})
 		.done(function (res) {
+			console.log('done');
 			chatSDK.initGlobals();
 			//bug it is enter into fail
 			GUICallbackFunction(true, res);
 		})
 		.fail(function (jqXHR, textStatus) {
+			console.log('fail');
 			if (jqXHR.statusText == "OK") { //workaround for empty result of JSON
 				//chatSDK.displayError(textStatus);
 				chatSDK.initGlobals();
