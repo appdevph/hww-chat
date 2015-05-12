@@ -52,14 +52,17 @@ var chat = {
 
         $('#subject').on("keypress", function (e) {            
 
+            console.log("#subject.keypress...")
+
             if (e.keyCode == 13) {
                 // Cancel the default action on keypress event
                 e.preventDefault(); 
-                $('#loader').show();
+                $('#loader').show();             
 
                 // Using our tzPOST wrapper function
                 // (defined in the bottom):
-                chatSDK.joinchat($('#name').val(), $('#subject').val(), function (success, result) {
+
+                chatSDK.joinchat($('#name').val(), $('#email').val(), $('#subject').val(), function (success, result) {
 
                     working = false;
 
@@ -79,13 +82,13 @@ var chat = {
             working = true;
 
             // Using our tzPOST wrapper function
-            // (defined in the bottom):
+            // (defined in the bottom): 
 
-            chatSDK.joinchat($('#name').val(), $('#subject').val(), function (success, result) {
+            chatSDK.joinchat($('#name').val(), $('#email').val(), $('#subject').val(), function (success, result) {
 
                 working = false;
 
-                if (success == false) {				
+                if (success == false) {             
                     chat.displayError(result.statusText);
                 } else {
                     chat.login($('#name').val(), result.Connection_ID);
