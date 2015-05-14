@@ -18,10 +18,10 @@
 		</div>
 		<div id="chatbox" class="hidden">
 		<a href="#" class="open" id="chat">Live Chat</a>
-		<p class="close"><a href="#" id="close"><span>x</span> No Thanks!</a></p>
+		<p class="close"><a href="#" id="close"><span>x</span> Close</a></p>
 		<!--p class="chatbox-title"><strong>We’re online every single day!</strong></br>Queries? Chat with our help desk support now.</p-->
 		<div id="chatStatus" class="chatbox-title"><strong>We’re online every single day!</strong></br>Queries? Chat with our help desk support now.</div>
-			<form>
+			<form data-abide="ajax" id="myForm">
 
 				<!--div id ="chatStatus" class="statusLine"></div-->
 
@@ -32,10 +32,10 @@
 				<div id="chatBottomBar">
 				<div class="tip"></div>
 				<div id="loginForm">
-					<p><label for="Name"><strong>Please tell us who you are</strong><span><strong> *</strong></span></label><input type="text" id="name" placeholder="Name"/></p>
-					<p><input type="email" id="email" placeholder="Email Address"/></p>
-					<p><label for="Subject"><strong>How can we help you?</strong><!--span><strong> *</strong></span--></label><textarea id="subject" cols="30" rows="2" placeholder="Have questions about our products or services? Tell us!"></textarea></p>
-					<p><input id="connect" type="button" value="Start Chatting" /></p>
+					<p><label for="Name"><strong>Please tell us who you are</strong><span><strong> *</strong></span></label><input type="text" id="name" placeholder="Name" required pattern="[a-zA-Z]+"/><small class="error">Name is required and must be a string.</small></p>
+					<p><input type="email" id="email" placeholder="Email Address" required/><small class="error">An email address is required.</small></p>
+					<p><label for="Subject"><strong>How can we help you?</strong><span><strong> *</strong></span></label><textarea id="subject" cols="30" rows="2" placeholder="Have questions about our products or services? Tell us!" required></textarea><small class="error">A subject message is required.</small></p>
+					<p><input id="connect" type="submit" value="Start Chatting"/></p>
 					<img src="img/loadingline.gif" id="loader"/>
 				</div>
 				<div id="submitForm">

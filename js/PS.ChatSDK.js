@@ -59,7 +59,11 @@
 		"Calling_User_URL" : "",
 		"Calling_User_FirstName" : "CustomerFirstName",
 		"Calling_User_LastName" : "CustomerLastName",
-		"TenantID" : "CEM"
+		"TenantID" : "CEM",
+		"OptionalParameterCount" : "3",
+		"OptionalParameter0" : "emailAddress,rorenz@gmail.com",
+		"OptionalParameter1" : "company,PLDT",
+		"OptionalParameter2" : "contact,8231100"
 	},
 
 	data_obj2: { "Connection_ID": 123, "Message_Text": "enghouse test page" },
@@ -73,6 +77,7 @@
 		//CCUServerAddress : "http://192.116.195.147"
 		//CCUServerAddress : "http://192.168.14.159" 
 		CCUServerAddress : "http://125.5.104.148"
+		//CCUServerAddress : "http://chat.epldt.com"
 	},
 
 	// Init binds event listeners and sets up timers:
@@ -212,9 +217,9 @@
 		//	    data_obj1.Routing_Priority = $('#routingprio').val();
 		//	    data_obj1.TQOS = $('#tqos').val();
 		//	adding OPTIONAL PARAMETERS
-		chatSDK.data_obj1.Calling_User_EmailAddress = strEmailAddress;
-		chatSDK.data_obj1.Calling_User_Contact = "contacts_here";
-		chatSDK.data_obj1.Calling_User_Company = "company_here";
+		// chatSDK.data_obj1.OptionalParameter0 = strEmailAddress;
+		// chatSDK.data_obj1.OptionalParameter1 = "contacts_here";
+		// chatSDK.data_obj1.OptionalParameter2 = "company_here";
 
 
 		//theInterval = window.setInterval(doAjax, 10000);

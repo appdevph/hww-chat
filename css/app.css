@@ -9588,7 +9588,7 @@ form textarea {
     box-shadow: none
 }
 
-form input[type="button"] {
+form input[type="button"],form input[type="submit"] {
     background-color: #b90504;
     border: 0;
     color: #fff;

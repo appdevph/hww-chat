@@ -18,10 +18,12 @@ $(document).ready(function() {
     var hidden = $('.hidden');
     if (hidden.hasClass('visible')){
         hidden.animate({"left":"-300px"}, "slow").removeClass('visible');
+        //$('#myForm')[0].reset();
     } else {
         hidden.animate({"left":"0px"}, "slow").addClass('visible');
     }
     });	
+
 });
 
 // END CHATBOX

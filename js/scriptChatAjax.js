@@ -50,33 +50,39 @@ var chat = {
             return '';
         };
 
-        $('#subject').on("keypress", function (e) {            
+        // $('#subject').on("keypress", function (e) {        
+        //     console.log("#subject.keypress...")
 
-            console.log("#subject.keypress...")
+        //     if (e.keyCode == 13) {
+        //         // Cancel the default action on keypress event
+        //         e.preventDefault(); 
+        //         $('#loader').show();             
 
-            if (e.keyCode == 13) {
-                // Cancel the default action on keypress event
-                e.preventDefault(); 
-                $('#loader').show();             
+        //         // Using our tzPOST wrapper function
+        //         // (defined in the bottom):
 
-                // Using our tzPOST wrapper function
-                // (defined in the bottom):
+        //         chatSDK.joinchat($('#name').val(), $('#email').val(), $('#subject').val(), function (success, result) {
 
-                chatSDK.joinchat($('#name').val(), $('#email').val(), $('#subject').val(), function (success, result) {
+        //             working = false;
 
-                    working = false;
+        //             if (success == false) {             
+        //                 chat.displayError(result.statusText);
+        //             } else {
+        //                 chat.login($('#name').val(), result.Connection_ID);
+        //             }
+        //         });
+        //     }
+        // });
 
-                    if (success == false) {             
-                        chat.displayError(result.statusText);
-                    } else {
-                        chat.login($('#name').val(), result.Connection_ID);
-                    }
-                });
-            }
-        });
-
-        $(document).on("click", "#connect", function () {
+        $('#myForm')
+        .on('invalid.fndtn.abide', function () {
+            var invalid_fields = $(this).find('[data-invalid]');
+            console.log(invalid_fields);
+        })
+        .on('valid.fndtn.abide', function () {
+            console.log('valid!');
             $('#loader').show();
+            console.log("#connect.click...")
 
             if (working) return false;
             working = true;
@@ -94,9 +100,32 @@ var chat = {
                     chat.login($('#name').val(), result.Connection_ID);
                 }
             });
+        }); 
 
-            return false;
-        });
+
+        // $(document).on("click", "#connect", function () {
+        //     $('#loader').show();
+        //     console.log("#connect.click...")
+
+        //     if (working) return false;
+        //     working = true;
+
+        //     // Using our tzPOST wrapper function
+        //     // (defined in the bottom): 
+
+        //     chatSDK.joinchat($('#name').val(), $('#email').val(), $('#subject').val(), function (success, result) {
+
+        //         working = false;
+
+        //         if (success == false) {             
+        //             chat.displayError(result.statusText);
+        //         } else {
+        //             chat.login($('#name').val(), result.Connection_ID);
+        //         }
+        //     });
+
+        //     return false;
+        // });
 
         // Submitting a new chat entry:
 

@@ -163,7 +163,6 @@ display:none;
 	outline:none;
 }
 
-input.ui-autocomplete-loading { background:url('img/loading.gif') no-repeat right center; }
 
 #submitForm, #endChat{
 	display:none;
